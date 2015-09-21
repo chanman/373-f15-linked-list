@@ -21,11 +21,25 @@ list_t* insert_sorted(list_t* head, list_t* new_element) {
 		compared = pointed->index;
 	}
 
-	new_element->next = pointed;
-
-	if(prev!= NULL){
-		prev->next= new_element;
+	if(pointed->next==NULL){
+		if(new_element->index > pointed->index){
+			pointed->next=new_element;
+			new_element->next=NULL;
+		}
+		else{
+			prev->next = new_element;
+			new_element->next=pointed;
+		}
 	}
+
+	else{
+		new_element->next = pointed;
+		if(prev!= NULL){
+			prev->next= new_element;
+		}
+	}
+
+
 
 	if(new_element->next == head){
 		head= new_element;
@@ -39,10 +53,23 @@ list_t* insert_sorted(list_t* head, list_t* new_element) {
 list_t* reverse(list_t* head) {
 	assert(head != NULL);
 
-	list_t* newhead;
+	list_t* prev;
+	list_t* next;
+	prev=head;
+	if(head->next==NULL){
+		return; //do nothing if list of length 1
+	}
 
-	while(head->next!=NULL){
+	head=head->next;
+	prev->next=NULL;
+	next=head->next;
+	head->next=prev;
 
+	while(next != NULL){
+		prev=head;
+		head=next;
+		next= head->next;
+		head->next=prev;
 	}
 
 	return head;
